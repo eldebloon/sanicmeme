@@ -1,2 +1,2 @@
-# sanic
+# SANIC
 sanic memecoin website
