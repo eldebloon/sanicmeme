@@ -1063,19 +1063,27 @@
     // how each named region gets independent control.
     // ---------------------------------------------------------------
     function computeTargetMesh(geometry, config){
+      // NOTE ON THESE NUMBERS: geometry.faceHeight comes from MediaPipe's
+      // facial landmark box, which only spans eyebrow-to-chin - it does
+      // NOT include the forehead/hairline at all. Row factors need to be
+      // large enough to cover that missing forehead distance on top of
+      // reaching the actual headpiece position, which is why these are
+      // much bigger in magnitude than they might look like they need to
+      // be. Increased across the board after seeing a live result land
+      // too low (near eye-level) and too narrow (didn't reach head width).
       const rowFactors = [
-        -0.75 * config.crownScaleY,                  // row0: ear tips
-        -0.45 * config.crownScaleY,                  // row1: ear base / temple
-        -0.20 * config.backSpikeScale,                // row2: side spikes
-        -0.05,                                        // row3: brow-dip / faceTop
-         0.15 * config.backSpikeScale                  // row4: bottom edge (dangles/earring)
+        -1.35 * config.crownScaleY,                    // row0: ear tips
+        -0.95 * config.crownScaleY,                    // row1: ear base / temple
+        -0.55 * config.backSpikeScale,                  // row2: side spikes
+        -0.20,                                          // row3: brow-dip / faceTop
+         0.05 * config.backSpikeScale                    // row4: bottom edge (dangles/earring)
       ];
       const colFactors = [
-        -0.62 * config.backSpikeScale,                 // col0: left edge
-        -0.50 * config.earScale * config.crownScaleX,  // col1: left ear tip
-         0,                                             // col2: center
-         0.50 * config.earScale * config.crownScaleX,  // col3: right ear tip
-         0.62 * config.backSpikeScale                   // col4: right edge
+        -0.95 * config.backSpikeScale,                   // col0: left edge
+        -0.75 * config.earScale * config.crownScaleX,    // col1: left ear tip
+         0,                                               // col2: center
+         0.75 * config.earScale * config.crownScaleX,    // col3: right ear tip
+         0.95 * config.backSpikeScale                     // col4: right edge
       ];
 
       const rotation = geometry.rotation + (config.rotationOffset*Math.PI/180);
